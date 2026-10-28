@@ -1,0 +1,11 @@
+const Database = require('better-sqlite3');
+const path = require('path'), fs = require('fs');
+const { apply } = require('./lib/schema');
+const file = process.env.DB_PATH || path.join(__dirname, 'data', 'hotelpro.db');
+fs.mkdirSync(path.dirname(file), { recursive: true });
+const db = new Database(file);
+db.pragma('journal_mode = WAL');
+db.pragma('foreign_keys = ON');
+db.pragma('busy_timeout = 5000');
+apply(db);
+module.exports = db;
